@@ -45,3 +45,4 @@ bin/
 obj/
 platforms/
 AppPackages/
+.fake
