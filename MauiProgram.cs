@@ -10,12 +10,12 @@ public static class MauiProgram
 	{
 		var builder = MauiApp.CreateBuilder();
 
-		// var a = Assembly.GetExecutingAssembly();
-		// using var stream = a.GetManifestResourceStream("Notes.appsettings.json");
+		var a = Assembly.GetExecutingAssembly();
+		using var stream = a.GetManifestResourceStream("Notes.appsettings.json");
 
-		// var config = new ConfigurationBuilder()
-		// 		.AddJsonStream(stream)
-		// 		.Build();
+		var config = new ConfigurationBuilder()
+				.AddJsonStream(stream)
+				.Build();
 
 		// builder.Configuration.AddConfiguration(config);
 
