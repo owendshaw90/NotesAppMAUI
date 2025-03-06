@@ -1,11 +1,13 @@
+using Notes.ViewModels;
+
 namespace Notes.Views;
 
-using Notes.ViewModels;
+
 public partial class NotePage : ContentPage
 {
-	public NotePage()
+	public NotePage(NoteViewModel viewModel)
 	{
-		this.BindingContext = new NoteViewModel();
+		this.BindingContext = viewModel;
 		InitializeComponent();
 	}
 }
