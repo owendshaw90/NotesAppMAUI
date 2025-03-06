@@ -27,7 +27,7 @@ public class AllNotesViewModel : IQueryAttributable
     await Shell.Current.GoToAsync(nameof(Views.NotePage));
   }
 
-  private async Task SelectNoteAsync(ViewModels.NoteViewModel note)
+  private async Task SelectNoteAsync(ViewModels.NoteViewModel? note)
   {
     if (note != null)
       await Shell.Current.GoToAsync($"{nameof(Views.NotePage)}?load={note.Id}");
@@ -36,6 +36,8 @@ public class AllNotesViewModel : IQueryAttributable
   void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
   {
     if (query.ContainsKey("deleted"))
+
+
     {
       string noteId = query["deleted"].ToString();
       NoteViewModel matchedNote = AllNotes.Where((n) => n.Id == int.Parse(noteId)).FirstOrDefault(); ;

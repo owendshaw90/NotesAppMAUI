@@ -10,7 +10,7 @@ public class Note
 {
   public int Id { get; set; }
   [Required]
-  public string Text { get; set; }
+  public string Text { get; set; } = string.Empty;
   [Required]
   public DateTime Date { get; set; }
 }

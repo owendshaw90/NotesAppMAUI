@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Notes.Data;
 using Notes.ViewModels;
 using Notes.Views;
+using System.Linq.Expressions;
 
 namespace Notes;
 
@@ -13,16 +14,45 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
+		builder.Logging.AddDebug();
+
+		builder
+			.UseMauiApp<App>()
+			.ConfigureFonts(fonts =>
+			{
+				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+			});
 
 		var a = Assembly.GetExecutingAssembly();
 		using var stream = a.GetManifestResourceStream("Notes.appsettings.json");
 
-		var config = new ConfigurationBuilder()
-				.AddJsonStream(stream)
-				.Build();
+		try
+		{
+			if (stream != null)
+			{
+				var config = new ConfigurationBuilder()
+					.AddJsonStream(stream)
+					.Build();
 
-		var connectionString = builder.Configuration.GetConnectionString("LocalConnection");
-		builder.Services.AddDbContext<NotesDbContext>(options => options.UseSqlServer(connectionString));
+				var connectionString = config.GetConnectionString("LocalConnection");
+
+				builder.Services.AddDbContext<NotesDbContext>(options => options.UseSqlServer(connectionString));
+
+				Console.WriteLine(config.GetConnectionString("DevelopmentConnection"));
+			}
+			else
+			{
+				Console.WriteLine("Error: appsettings.json not found!");
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Exception: {ex.Message}");
+			Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}");
+		}
+
+
 
 		builder.Services.AddSingleton<AllNotesViewModel>();
 		builder.Services.AddTransient<NoteViewModel>();
@@ -34,13 +64,7 @@ public static class MauiProgram
 		// builder.Configuration.AddConfiguration(config);
 
 
-		builder
-			.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			});
+
 
 #if DEBUG
 		builder.Logging.AddDebug();
