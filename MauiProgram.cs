@@ -35,7 +35,12 @@ public static class MauiProgram
 					.AddJsonStream(stream)
 					.Build();
 
-				var connectionString = config.GetConnectionString("LocalConnection");
+				var connectionString = config.GetConnectionString("DevelopmentConnection");
+
+				if (!connectionString.Contains("TrustServerCertificate="))
+				{
+					connectionString += ";TrustServerCertificate=true";
+				}
 
 				builder.Services.AddDbContext<NotesDbContext>(options => options.UseSqlServer(connectionString));
 
